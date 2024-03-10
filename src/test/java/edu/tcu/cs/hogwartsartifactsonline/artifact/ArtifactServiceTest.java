@@ -1,8 +1,5 @@
 package edu.tcu.cs.hogwartsartifactsonline.artifact;
-
-
 import edu.tcu.cs.hogwartsartifactsonline.wizard.Wizard;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +25,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class ArtifactServiceTest {
 
-    @Mock
+    @Mock //  This is will tell Mock that this is the repo we want to simulate
     ArtifactRepository artifactRepository;
 
-    @InjectMocks
+    @InjectMocks // This will  tell Mock that is the the service  will need to use fake date from mock
     ArtifactService artifactService;
 
 
@@ -46,25 +43,31 @@ class ArtifactServiceTest {
 
     @Test
     void testFindByIdSuccess() {
-
-        //Given.
-
+/*
+       Given. Where you prepare the behavior  of the fake date
+        Arrange inputs and targets. Define the behavior of Mock object artifactrepositor
+  */
         Artifact a = new Artifact();
         a.setId("1250808601744904192");
         a.setName("Invisibility Cloak");
         a.setDescription("An invisibility cloak is used to make the wearer invisible.");
         a.setImageUrl("ImageUrl");
 
+        // creating the fake wizard owner of the artifact
         Wizard w = new Wizard();
         w.setId(2);
         w.setName("Harry Potter");
         a.setOwner(w);
-
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));
-        // When
+
+
+
+
+        // When. Act on the target behavior. When steps should cover the method o be tested.
 
         Artifact returnedArtifact = this.artifactService.findById("1250808601744904192");
-        // Then
+        // Then. Comparing the expected results to the produced results by the mock, assert expected outcomes.
+
         assertThat(returnedArtifact.getId()).isEqualTo(a.getId());
         assertThat(returnedArtifact.getName()).isEqualTo(a.getName());
         assertThat(returnedArtifact.getDescription()).isEqualTo(a.getDescription());
@@ -75,19 +78,29 @@ class ArtifactServiceTest {
     }
 
     @Test
-    void testFindByIdNotFound() {
-        // Given
+    void testFindByIdNoFound(){
+
+        //Given
+
         given(this.artifactRepository.findById(Mockito.any(String.class))).willReturn(Optional.empty());
 
         // When
-        Throwable thrown = catchThrowable(() -> {
-            Artifact returnedArtifact = this.artifactService.findById("1250808601744904192");
-        });
 
+        // If artifact throws any exception, then  catchThrowable will catch the expectation and assign the exception
+        // to thrown variable so that we can use it in "the then" part
+
+       Throwable thrown = catchThrowable(()-> {
+           Artifact returnedArtifact = this.artifactService.findById("1250808601744904192");
+        });
         // Then
         assertThat(thrown)
                 .isInstanceOf(ArtifactNotFoundException.class)
-                .hasMessage("Could not find artifact with Id 1250808601744904192 :(");
+                .hasMessage("Could not find artifact with Id 1250808601744904192 :( ");
         verify(this.artifactRepository, times(1)).findById("1250808601744904192");
+
+
     }
+
+
+
 }
