@@ -1,9 +1,8 @@
 package edu.tcu.cs.hogwartsartifactsonline.artifact;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.tcu.cs.hogwartsartifactsonline.system.StatusCode;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,23 +25,22 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-
-@AutoConfigureMockMvc
+import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
+@AutoConfigureMockMvc
 class ArtifactControllerTest {
 
-
     @Autowired
+
     MockMvc mockMvc;
-
-
     @MockBean
     ArtifactService artifactService;
 
     List<Artifact> artifacts;
+
 
     @BeforeEach
     void setUp() {
@@ -97,24 +95,33 @@ class ArtifactControllerTest {
     void tearDown() {
     }
 
-//    @Test
-//    void testFindArtifactByIdSuccess() throws Exception {
-//
-//        //Given
-//
-//        given(this.artifactService.findById("1250808601744904191")).willReturn(this.artifacts.get(0));
-//        //When and then
-//
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artifacts/1250808601744904191")
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.data.flag").value(true))
-//                .andExpect(jsonPath("$.data.code").value(StatusCode.SUCCESS))
-//                .andExpect(jsonPath("$.data.message").value("Find One Success"))
-//                .andExpect(jsonPath("$.data.id").value("1250808601744904191"))
-//                .andExpect(jsonPath("$.data.name").value("Deluminator"));
-//
-//
-//    }
+    @Test
+    void testFindArtifactByIdSuccess() throws Exception {
+        //Given
+        given(this.artifactService.findById("1250808601744904191")).willReturn(this.artifacts.get(0));
+
+        // When and then
+
+        this.mockMvc.perform(get("/api/v1/artifacts/1250808601744904191").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find One Success"))
+                .andExpect(jsonPath("$.data.id").value("1250808601744904191"))
+                .andExpect(jsonPath("$.data.name").value("Deluminator"));
 
 
+    }
+
+    @Test
+    void testFindArtifactByIdNotFound() throws Exception {
+        //Given
+        given(this.artifactService.findById("1250808601744904191")).willThrow(new ArtifactNotFoundException("1250808601744904191"));
+        // When and then
+        this.mockMvc.perform(get("/api/v1/artifacts/1250808601744904191").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find artifact with Id 1250808601744904191 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
+
+    }
 }
