@@ -85,7 +85,6 @@ class ArtifactServiceTest {
         given(this.artifactRepository.findById(Mockito.any(String.class))).willReturn(Optional.empty());
 
         // When
-
         // If artifact throws any exception, then  catchThrowable will catch the expectation and assign the exception
         // to thrown variable so that we can use it in "the then" part
 
