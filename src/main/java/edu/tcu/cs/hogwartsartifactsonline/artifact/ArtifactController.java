@@ -28,4 +28,11 @@ public class ArtifactController {
         return new Result(true, StatusCode.SUCCESS, "Find One Success", foundArtifact);
 
     }
+
+    @GetMapping
+    public Result findAllArtifacts(){
+
+        return null;
+
+    };
 }
