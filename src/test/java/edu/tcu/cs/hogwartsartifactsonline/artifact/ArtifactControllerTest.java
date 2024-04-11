@@ -124,4 +124,22 @@ class ArtifactControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
 
     }
+
+    @Test
+    void testFindAllArtifactSuccess() throws Exception {
+
+        //Given
+        given (this.artifactService.findAll()).willReturn(this.artifacts);
+
+        //When and Then
+        this.mockMvc.perform(get("/api/v1/artifacts").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find All Success"))
+                .andExpect(jsonPath("$.data", Matchers.hasSize(this.artifacts.size())))
+                .andExpect(jsonPath("data[0].id").value("1250808601744904191"))
+                .andExpect(jsonPath("data[0].name").value("Deluminator"))
+                .andExpect(jsonPath("data[1].id").value("1250808601744904191"))
+                .andExpect(jsonPath("data[1].name").value("Invisibility Cloack"));
+    }
 }

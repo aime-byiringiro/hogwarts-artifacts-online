@@ -24,7 +24,8 @@ public class ArtifactService {
 
 
     public List<Artifact> findAll() {
-        return List.of();
+
+        return this.artifactRepository.findAll();
     }
 
 

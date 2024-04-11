@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 public class ArtifactController {
   private final ArtifactService artifactService;
@@ -32,8 +35,14 @@ public class ArtifactController {
     @GetMapping("/api/v1/artifa  cts")
     public Result findAllArtifacts(){
 
+        List<Artifact> foundArtifacts = this.artifactService.findAll();
 
-        return null;
+
+        //Convert foundArtifacts to a list of artifactsDtos
+        List<ArtifactDto> artifactDtos =  foundArtifacts.stream()
+                .map(this.artifactToArtifactDtoConverter::convert)
+                .collect(Collectors.toList());
+        return new Result(true, StatusCode.SUCCESS, "finda All Success", artifactDtos);
 
     };
 }

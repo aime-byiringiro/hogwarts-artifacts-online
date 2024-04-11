@@ -30,11 +30,30 @@ class ArtifactServiceTest {
 
     @InjectMocks // This will  tell Mock that is the the service  will need to use fake date from mock
     ArtifactService artifactService;
+    List<Artifact> artifacts;
 
 
 
     @BeforeEach
     void setUp() {
+
+        Artifact a1 = new Artifact();
+        a1.setId("");
+        a1.setName("Deluminator");
+        a1.setDescription("A Deluminator is a device inventd by Albus Dumbledore that resemble");
+        a1.setImageUrl("imageUrl");
+
+        Artifact a2 = new Artifact();
+        a2.setId("");
+        a2.setName("Invisibility Cloak");
+        a2.setDescription("An invisibility cloak is used to make the wearer invisible");
+        a2.setImageUrl("imageUrl");
+
+
+        this.artifacts = new ArrayList<>();
+        this.artifacts.add(a1);
+        this.artifacts.add(a2);
+
     }
 
     @AfterEach
@@ -97,6 +116,25 @@ class ArtifactServiceTest {
                 .hasMessage("Could not find artifact with Id 1250808601744904192 :( ");
         verify(this.artifactRepository, times(1)).findById("1250808601744904192");
 
+
+    }
+
+
+    @Test
+    void testFindAllSuccess(){
+        //Given
+        given(artifactRepository.findAll()).willReturn(this.artifacts);
+
+
+        //When
+        List<Artifact> actualArtifacts = artifactService.findAll();
+
+
+        //Then
+
+        assertThat(actualArtifacts.size()).isEqualTo(this.artifacts.size());
+
+        verify(artifactRepository, times(1)).findAll();
 
     }
 
