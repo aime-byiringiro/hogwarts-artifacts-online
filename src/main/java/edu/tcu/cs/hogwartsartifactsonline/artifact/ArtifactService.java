@@ -3,6 +3,8 @@ package edu.tcu.cs.hogwartsartifactsonline.artifact;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 @Service
 @Transactional
 public class ArtifactService {
@@ -10,6 +12,7 @@ public class ArtifactService {
     private final ArtifactRepository artifactRepository;
 
     public ArtifactService(ArtifactRepository artifactRepository) {
+
         this.artifactRepository = artifactRepository;
     }
 
@@ -18,4 +21,11 @@ public class ArtifactService {
                 .findById(artifactId).
                 orElseThrow( ()-> new ArtifactNotFoundException(artifactId));
     };
+
+
+    public List<Artifact> findAll() {
+        return List.of();
+    }
+
+
 }

@@ -52,11 +52,11 @@ class ArtifactServiceTest {
         a.setName("Invisibility Cloak");
         a.setDescription("An invisibility cloak is used to make the wearer invisible.");
         a.setImageUrl("ImageUrl");
-
         // creating the fake wizard owner of the artifact
         Wizard w = new Wizard();
         w.setId(2);
         w.setName("Harry Potter");
+
         a.setOwner(w);
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));
 

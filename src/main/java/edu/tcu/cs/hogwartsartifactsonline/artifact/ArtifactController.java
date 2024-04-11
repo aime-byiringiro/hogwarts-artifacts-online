@@ -29,8 +29,9 @@ public class ArtifactController {
 
     }
 
-    @GetMapping
+    @GetMapping("/api/v1/artifa  cts")
     public Result findAllArtifacts(){
+
 
         return null;
 
