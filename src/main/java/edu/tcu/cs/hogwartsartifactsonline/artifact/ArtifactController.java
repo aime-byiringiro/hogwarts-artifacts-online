@@ -4,10 +4,7 @@ import edu.tcu.cs.hogwartsartifactsonline.artifact.converter.ArtifactToArtifactD
 import edu.tcu.cs.hogwartsartifactsonline.artifact.dt0.ArtifactDto;
 import edu.tcu.cs.hogwartsartifactsonline.system.Result;
 import edu.tcu.cs.hogwartsartifactsonline.system.StatusCode;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,4 +42,10 @@ public class ArtifactController {
         return new Result(true, StatusCode.SUCCESS, "finda All Success", artifactDtos);
 
     };
+
+    @PostMapping("/api/v1/artifacts")
+    public Result addArtifact(@RequestBody ArtifactDto artifactDto){
+
+        return null;
+    }
 }

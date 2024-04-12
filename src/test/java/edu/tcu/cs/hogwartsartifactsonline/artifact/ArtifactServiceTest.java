@@ -1,4 +1,5 @@
 package edu.tcu.cs.hogwartsartifactsonline.artifact;
+import edu.tcu.cs.hogwartsartifactsonline.artifact.utils.IdWorker;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.Wizard;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,13 @@ class ArtifactServiceTest {
 
     @Mock //  This is will tell Mock that this is the repo we want to simulate
     ArtifactRepository artifactRepository;
+
+
+
+
+
+    @Mock
+    IdWorker idWorker;
 
     @InjectMocks // This will  tell Mock that is the the service  will need to use fake date from mock
     ArtifactService artifactService;
@@ -135,6 +143,32 @@ class ArtifactServiceTest {
         assertThat(actualArtifacts.size()).isEqualTo(this.artifacts.size());
 
         verify(artifactRepository, times(1)).findAll();
+
+    }
+
+
+
+    @Test
+    void testSaveSuccess(){
+        //Given
+
+        Artifact newArtifact = new Artifact();
+        newArtifact.setName("Artifact 3");
+        newArtifact.setDescription("Description....");
+        newArtifact.setImageUrl("ImageUrl.....");
+
+
+        given(idWorker.nextId()).willReturn(123456L);
+        given(artifactRepository.save(newArtifact)).willReturn(newArtifact);
+
+
+
+        //When
+    
+
+
+        //Then
+
 
     }
 
