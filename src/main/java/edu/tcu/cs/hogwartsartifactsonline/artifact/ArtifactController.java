@@ -5,6 +5,7 @@ import edu.tcu.cs.hogwartsartifactsonline.artifact.converter.ArtifactToArtifactD
 import edu.tcu.cs.hogwartsartifactsonline.artifact.dt0.ArtifactDto;
 import edu.tcu.cs.hogwartsartifactsonline.system.Result;
 import edu.tcu.cs.hogwartsartifactsonline.system.StatusCode;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class ArtifactController {
     };
 
     @PostMapping("/api/v1/artifacts")
-    public Result addArtifact(@RequestBody ArtifactDto artifactDto){
+    public Result addArtifact(@Valid @RequestBody ArtifactDto artifactDto){
 
         //convert artifacdto to artifact
       Artifact newArtifact =  this.artifactDtoToArtifactConverter.convert(artifactDto);

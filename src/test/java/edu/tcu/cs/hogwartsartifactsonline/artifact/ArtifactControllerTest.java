@@ -148,13 +148,16 @@ class ArtifactControllerTest {
         ArtifactDto artifactDto = new ArtifactDto(null,
                 "Remembrall",
                 "A Remembrall was a magical large marble-sized glass ball that contained smoke which turned red when its owner or user had forgotten something. It turned clear once whatever was forgotten was remembered.",
-                "ImageUrl"
+                "ImageUrl",
+                null
+
+
         );
        String json = this.objectMapper.writeValueAsString(artifactDto);
 
         // pre defined fake data from server
        Artifact savedArtifact = new Artifact();
-       savedArtifact.setId("12209487509438571089");
+       savedArtifact.setId("1250808601744904195");
        savedArtifact.setName("Remembrall");
        savedArtifact.setDescription("A Remembrall was a magical large marble-sized glass ball that contained smoke which turned red when its owner or user had forgotten something. It turned clear once whatever was forgotten was remembered.");
        savedArtifact.setImageUrl("ImageUrl");
@@ -172,7 +175,7 @@ class ArtifactControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.id").value("isNotEmpty"))
+                .andExpect(jsonPath("$.data.id").isNotEmpty())
                 .andExpect(jsonPath("$.data.name").value(savedArtifact.getName()))
                 .andExpect(jsonPath("$.data.description").value(savedArtifact.getDescription()))
                 .andExpect(jsonPath("$.data.imageUrl").value(savedArtifact.getImageUrl()));
