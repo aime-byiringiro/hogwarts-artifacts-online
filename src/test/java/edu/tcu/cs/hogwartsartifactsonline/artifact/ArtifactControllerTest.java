@@ -1,7 +1,7 @@
 package edu.tcu.cs.hogwartsartifactsonline.artifact;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tcu.cs.hogwartsartifactsonline.artifact.dt0.ArtifactDto;
 import edu.tcu.cs.hogwartsartifactsonline.system.StatusCode;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -9,26 +9,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class ArtifactControllerTest {
@@ -38,6 +34,8 @@ class ArtifactControllerTest {
     MockMvc mockMvc;
     @MockBean
     ArtifactService artifactService;
+    @Autowired
+    ObjectMapper objectMapper;
 
     List<Artifact> artifacts;
 
@@ -141,5 +139,56 @@ class ArtifactControllerTest {
                 .andExpect(jsonPath("data[0].name").value("Deluminator"))
                 .andExpect(jsonPath("data[1].id").value("1250808601744904191"))
                 .andExpect(jsonPath("data[1].name").value("Invisibility Cloack"));
+    }
+
+    @Test
+    void testAddArtifactSuccess() throws Exception {
+        // given
+        // What the front end provide to the controller
+        ArtifactDto artifactDto = new ArtifactDto(null,
+                "Remembrall",
+                "A Remembrall was a magical large marble-sized glass ball that contained smoke which turned red when its owner or user had forgotten something. It turned clear once whatever was forgotten was remembered.",
+                "ImageUrl"
+        );
+       String json = this.objectMapper.writeValueAsString(artifactDto);
+
+        // pre defined fake data from server
+       Artifact savedArtifact = new Artifact();
+       savedArtifact.setId("12209487509438571089");
+       savedArtifact.setName("Remembrall");
+       savedArtifact.setDescription("A Remembrall was a magical large marble-sized glass ball that contained smoke which turned red when its owner or user had forgotten something. It turned clear once whatever was forgotten was remembered.");
+       savedArtifact.setImageUrl("ImageUrl");
+
+
+       given(this.artifactService.save(Mockito.any(Artifact.class))).willReturn(savedArtifact);
+
+
+
+
+        // when and then
+
+
+        this.mockMvc.perform(post("/api/v1/artifacts").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.id").value("isNotEmpty"))
+                .andExpect(jsonPath("$.data.name").value(savedArtifact.getName()))
+                .andExpect(jsonPath("$.data.description").value(savedArtifact.getDescription()))
+                .andExpect(jsonPath("$.data.imageUrl").value(savedArtifact.getImageUrl()));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

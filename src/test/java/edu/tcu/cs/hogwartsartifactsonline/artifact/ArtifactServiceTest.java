@@ -30,9 +30,6 @@ class ArtifactServiceTest {
     ArtifactRepository artifactRepository;
 
 
-
-
-
     @Mock
     IdWorker idWorker;
 
@@ -158,16 +155,23 @@ class ArtifactServiceTest {
         newArtifact.setImageUrl("ImageUrl.....");
 
 
-        given(idWorker.nextId()).willReturn(123456L);
+        given(idWorker.nextId()).willReturn(123456L); // returning a fake id
         given(artifactRepository.save(newArtifact)).willReturn(newArtifact);
 
 
-
         //When
-    
 
+        Artifact savedArtifact = artifactService.save(newArtifact);
 
         //Then
+
+        assertThat(savedArtifact.getId()).isEqualTo("123456 ");
+        assertThat(savedArtifact.getName()).isEqualTo(newArtifact.getName());
+        assertThat(savedArtifact.getDescription()).isEqualTo(newArtifact.getDescription());
+        assertThat(savedArtifact.getImageUrl()).isEqualTo(newArtifact.getImageUrl());
+
+        verify(artifactRepository, times(1)).save(newArtifact);
+
 
 
     }

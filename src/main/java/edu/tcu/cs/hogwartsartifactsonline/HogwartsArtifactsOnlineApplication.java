@@ -14,8 +14,9 @@ public class HogwartsArtifactsOnlineApplication {
         SpringApplication.run(HogwartsArtifactsOnlineApplication.class, args);
 
     }
-    @Bean
+    @Bean // idWorker object that can be managed by spring
     public IdWorker idWorker(){
+
         return new IdWorker(1,1);
     }
 

@@ -1,5 +1,6 @@
 package edu.tcu.cs.hogwartsartifactsonline.artifact;
 
+import edu.tcu.cs.hogwartsartifactsonline.artifact.converter.ArtifactDtoToArtifactConverter;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.converter.ArtifactToArtifactDtoConverter;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.dt0.ArtifactDto;
 import edu.tcu.cs.hogwartsartifactsonline.system.Result;
@@ -15,9 +16,12 @@ public class ArtifactController {
 
   private  final ArtifactToArtifactDtoConverter artifactToArtifactDtoConverter;
 
-    public ArtifactController(ArtifactService artifactService, ArtifactToArtifactDtoConverter artifactToArtifactDtoConverter) {
+  private final ArtifactDtoToArtifactConverter artifactDtoToArtifactConverter;
+
+    public ArtifactController(ArtifactService artifactService, ArtifactToArtifactDtoConverter artifactToArtifactDtoConverter, ArtifactDtoToArtifactConverter artifactDtoToArtifactConverter) {
         this.artifactService = artifactService;
         this.artifactToArtifactDtoConverter = artifactToArtifactDtoConverter;
+        this.artifactDtoToArtifactConverter = artifactDtoToArtifactConverter;
     }
 
 
@@ -46,6 +50,10 @@ public class ArtifactController {
     @PostMapping("/api/v1/artifacts")
     public Result addArtifact(@RequestBody ArtifactDto artifactDto){
 
-        return null;
+        //convert artifacdto to artifact
+      Artifact newArtifact =  this.artifactDtoToArtifactConverter.convert(artifactDto);
+      Artifact savedArtifact = this.artifactService.save(newArtifact);
+      ArtifactDto  savedArtifactDto = this.artifactToArtifactDtoConverter.convert(savedArtifact);
+      return new Result(true, StatusCode.SUCCESS, "Add Success", savedArtifactDto);
     }
 }

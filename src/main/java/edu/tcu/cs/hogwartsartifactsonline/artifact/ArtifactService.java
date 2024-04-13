@@ -30,8 +30,12 @@ public class ArtifactService {
         return this.artifactRepository.findAll();
     }
 
+
+
     public Artifact save(Artifact newArtifact){
-        return null;
+
+        newArtifact.setId(idWorker.nextId() + " ");
+        return this.artifactRepository.save(newArtifact);
     }
 
 
